@@ -1,0 +1,151 @@
+name: Build Go
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+
+  build-go:
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/vpol/daily-proto-docker-runner:latest
+
+    steps:
+      - uses: actions/cache@v2
+        with:
+          path: github.com/vpol/daily-proto-go
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        env:
+          REPO_USER: ${{ secrets.REPO_USER }}
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+        run: |
+          mkdir -p github.com/vpol/daily-proto-go
+          cd github.com/vpol/
+          git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go
+          find ./daily-proto-go -type d -not -path './daily-proto-go/.git*' -not -path './daily-proto-go' -not -path './daily-proto-go/go.mod' -not -path './daily-proto-go/go.sum' | xargs rm  -rf {}
+          cd ../..
+          python /build.py go .
+
+      - name: List
+        run: find .
+
+  build-python:
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/vpol/daily-proto-docker-runner:latest
+
+    steps:
+      - uses: actions/cache@v2
+        with:
+          path: github.com/vpol/daily-proto-python
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        env:
+          REPO_USER: ${{ secrets.REPO_USER }}
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+        run: |
+          mkdir -p github.com/vpol/daily-proto-python
+          cd github.com/vpol/
+          git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-python
+          find ./daily-proto-python -type d -not -path './daily-proto-python/.git*' -not -path './omg-proto-python' | xargs rm  -rf {}
+          cd ../..
+          python /build.py python .
+
+      - name: List
+        run: find .
+
+  build-ts:
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/vpol/daily-proto-docker-runner:latest
+
+    steps:
+      - uses: actions/cache@v2
+        with:
+          path: github.com/vpol/daily-proto-ts
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        env:
+          REPO_USER: ${{ secrets.REPO_USER }}
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+        run: |
+          mkdir -p github.com/vpol/daily-proto-ts
+          cd github.com/vpol/
+          git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-ts
+          cd ../..
+          python /build.py ts .
+
+      - name: List
+        run: find .
+
+  tag:
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/vpol/daily-proto-docker-runner:latest
+
+    needs:
+      - build-go
+      - build-python
+      - build-ts
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get version
+        run: |
+          export SEMANTIC_VERSION=v`autotag -n`
+          echo "SEMANTIC_VERSION=${SEMANTIC_VERSION}" >> build.env
+          echo ${SEMANTIC_VERSION}
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: tag-version
+          path: build.env
+
+      - name: Create tag
+        uses: tvdias/github-tagger@2949d204e2f571a709c2af13a90759460fb56595
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          tag: ${SEMANTIC_VERSION}
+
+
+#  push-go:
+#
+#    runs-on: ubuntu-latest
+#    container:
+#      image: docker.io/vpol/daily-proto-docker-runner:latest
+#
+#    steps:
+#      - uses: actions/cache@v2
+#        with:
+#          path: github.com/vpol/daily-proto-go
+#          key: ${{ runner.os }}-docker-${{ github.sha }}
+#
+#      - name: Download a single artifact
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: tag-version
+#
+#      - name: List
+#        run: find .
