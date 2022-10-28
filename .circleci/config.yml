@@ -5,6 +5,9 @@ defaults: &defaults
 
 jobs:
 
+  sync:
+    <<: *defaults
+
   build-python:
 
     <<: *defaults
@@ -32,6 +35,12 @@ jobs:
           find ./daily-proto-python -type d -not -path './daily-proto-python/.git*' -not -path './daily-proto-python' | xargs rm  -rf {}
           cd ../..
           python /build.py python .
+
+  tag-python:
+    <<: *defaults
+
+    docker:
+      - image: docker.io/vpol/daily-proto-docker-runner:latest
 
 workflows:
 
