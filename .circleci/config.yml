@@ -1,0 +1,82 @@
+version: 2.1
+
+defaults: &defaults
+  working_directory: /tmp/workflows
+
+jobs:
+
+  build-python:
+
+    <<: *defaults
+
+    docker:
+      - image: docker.io/vpol/daily-proto-docker-runner:latest
+
+    steps:
+      - checkout
+      - run: |
+          mkdir -p github.com/vpol/daily-proto-python
+          cd github.com/vpol/
+          git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-python
+          find ./daily-proto-python -type d -not -path './daily-proto-python/.git*' -not -path './daily-proto-python' | xargs rm  -rf {}
+          cd ../..
+          python /build.py python .
+
+workflows:
+
+  build-and-update:
+
+    jobs:
+
+#      - build-go
+#
+#      - push-go:
+#          context: GCR
+#          requires:
+#            - build-go
+
+      - build-python
+
+      - push-python:
+          context: GCR
+          requires:
+            - build-python
+
+#      - build-ts
+#
+#      - push-ts:
+#          context: GCR
+#          requires:
+#            - build-ts
+
+      - sync:
+          requires:
+#            - push-go
+            - push-python
+#            - push-ts
+
+#      - tag-go:
+#          context: GCR
+#          requires:
+#            - sync
+#          filters:
+#            tags:
+#              only: /^v.*/
+
+      - tag-python:
+          context: GCR
+          requires:
+            - sync
+          filters:
+            tags:
+              only: /^v.*/
+
+#      - tag-ts:
+#          context: GCR
+#          requires:
+#            - sync
+#          filters:
+#            tags:
+#              only: /^v.*/
+#
+#
