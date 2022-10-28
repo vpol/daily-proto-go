@@ -8,8 +8,12 @@ jobs:
   sync:
     <<: *defaults
 
+    docker:
+      - image: docker.io/vpol/daily-proto-docker-runner:latest
+
     steps:
-      - echo 'sync'
+      - run: | 
+          echo "here"
 
   build-python:
 
@@ -40,10 +44,93 @@ jobs:
           python /build.py python .
 
   tag-python:
+
     <<: *defaults
 
     docker:
       - image: docker.io/vpol/daily-proto-docker-runner:latest
+
+    steps:
+      - run: |
+          echo "tag-python"
+
+  build-go:
+
+    <<: *defaults
+
+    docker:
+      - image: docker.io/vpol/daily-proto-docker-runner:latest
+
+    steps:
+      - checkout
+      - run: |
+          python /build.py go .
+
+  push-go:
+    <<: *defaults
+
+    docker:
+      - image: docker.io/vpol/daily-proto-docker-runner:latest
+
+    steps:
+      - checkout
+      - run: |
+          mkdir -p github.com/vpol/daily-proto-go
+          cd github.com/vpol/
+          git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go
+          find ./daily-proto-go -type d -not -path './daily-proto-go/.git*' -not -path './daily-proto-go' -not -path './daily-proto-go/go.mod' -not -path './daily-proto-go/go.sum' | xargs rm  -rf {}
+          cd ../..
+          python /build.py go .
+
+  tag-go:
+
+    <<: *defaults
+
+    docker:
+      - image: docker.io/vpol/daily-proto-docker-runner:latest
+
+    steps:
+      - run: |
+          echo "tag-go"
+
+  build-ts:
+
+    <<: *defaults
+
+    docker:
+      - image: docker.io/vpol/daily-proto-docker-runner:latest
+
+    steps:
+      - checkout
+      - run: |
+          python /build.py ts .
+
+
+  push-ts:
+    <<: *defaults
+
+    docker:
+      - image: docker.io/vpol/daily-proto-docker-runner:latest
+
+    steps:
+      - checkout
+      - run: |
+          mkdir -p github.com/vpol/daily-proto-ts
+          cd github.com/vpol/
+          git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-ts
+          cd ../..
+          python /build.py ts .
+
+  tag-ts:
+
+    <<: *defaults
+
+    docker:
+      - image: docker.io/vpol/daily-proto-docker-runner:latest
+
+    steps:
+      - run: |
+          echo "tag-ts"
 
 workflows:
 
@@ -51,12 +138,12 @@ workflows:
 
     jobs:
 
-#      - build-go
-#
-#      - push-go:
-#          context: GCR
-#          requires:
-#            - build-go
+      - build-go
+
+      - push-go:
+          context: GCR
+          requires:
+            - build-go
 
       - build-python
 
@@ -65,26 +152,28 @@ workflows:
           requires:
             - build-python
 
-#      - build-ts
-#
-#      - push-ts:
-#          context: GCR
-#          requires:
-#            - build-ts
+      - build-ts
+
+      - push-ts:
+          context: GCR
+          requires:
+            - build-ts
 
       - sync:
           requires:
-#            - push-go
+            - push-go
             - push-python
-#            - push-ts
+            - push-ts
 
-#      - tag-go:
-#          context: GCR
-#          requires:
-#            - sync
-#          filters:
-#            tags:
-#              only: /^v.*/
+      - tag-go:
+          context: GCR
+          requires:
+            - sync
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
 
       - tag-python:
           context: GCR
@@ -93,13 +182,16 @@ workflows:
           filters:
             tags:
               only: /^v.*/
+            branches:
+              ignore: /.*/
 
-#      - tag-ts:
-#          context: GCR
-#          requires:
-#            - sync
-#          filters:
-#            tags:
-#              only: /^v.*/
-#
-#
+      - tag-ts:
+          context: GCR
+          requires:
+            - sync
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+
