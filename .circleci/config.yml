@@ -8,6 +8,9 @@ jobs:
   sync:
     <<: *defaults
 
+    steps:
+      - echo 'sync'
+
   build-python:
 
     <<: *defaults
