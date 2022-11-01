@@ -42,6 +42,8 @@ jobs:
           find ./daily-proto-python -type d -not -path './daily-proto-python/.git*' -not -path './daily-proto-python' | xargs rm  -rf {}
           cd ../..
           python /build.py python .
+      - run: |
+          echo $CIRCLE_TAG
 
   tag-python:
 
