@@ -13,9 +13,9 @@ jobs:
 
     steps:
       - run: | 
-          echo "here"
+          echo "sync"
 
-  build-python:
+  lint-python:
 
     <<: *defaults
 
@@ -54,7 +54,7 @@ jobs:
       - run: |
           echo "tag-python"
 
-  build-go:
+  lint-go:
 
     <<: *defaults
 
@@ -93,7 +93,7 @@ jobs:
       - run: |
           echo "tag-go"
 
-  build-ts:
+  lint-ts:
 
     <<: *defaults
 
@@ -138,26 +138,26 @@ workflows:
 
     jobs:
 
-      - build-go
+      - lint-go
 
       - push-go:
           context: GCR
           requires:
-            - build-go
+            - lint-go
 
-      - build-python
+      - lint-python
 
       - push-python:
           context: GCR
           requires:
-            - build-python
+            - lint-python
 
-      - build-ts
+      - lint-ts
 
       - push-ts:
           context: GCR
           requires:
-            - build-ts
+            - lint-ts
 
       - sync:
           requires:
