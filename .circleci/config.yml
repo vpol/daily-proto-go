@@ -53,7 +53,7 @@ jobs:
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
           git tag 'dev-${CIRCLE_SHA1}'
-          git push -q https://${REPO_TOKEN}@github.com/vpol/daily-proto-python --tags
+          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-python --tags
 
   tag-python:
 
@@ -101,7 +101,7 @@ jobs:
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
           git tag 'dev-$CIRCLE_SHA1'
-          git push -q https://${REPO_TOKEN}@github.com/vpol/daily-proto-go --tags
+          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go --tags
 
   tag-go:
 
@@ -149,7 +149,7 @@ jobs:
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
           git tag 'dev-$CIRCLE_SHA1'
-          git push -q https://${REPO_TOKEN}@github.com/vpol/daily-proto-ts --tags
+          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-ts --tags
 
   tag-ts:
 
