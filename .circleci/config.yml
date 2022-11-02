@@ -38,6 +38,11 @@ jobs:
 
     steps:
       - checkout
+      - name: setup
+        command: |
+          git config credential.helper 'cache --timeout=120'
+          git config user.email "vpoluksht@gmail.com"
+          git config user.name "Viktor Poluksht"
       - run: |
           mkdir -p github.com/vpol/daily-proto-python
           cd github.com/vpol/
@@ -49,7 +54,7 @@ jobs:
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
           git tag 'dev-${CIRCLE_SHA1}'
-          git push https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-python --tags
+          git push -q https://${REPO_TOKEN}@github.com/vpol/daily-proto-python --tags
 
   tag-python:
 
@@ -82,6 +87,11 @@ jobs:
 
     steps:
       - checkout
+      - name: setup
+        command: |
+          git config credential.helper 'cache --timeout=120'
+          git config user.email "vpoluksht@gmail.com"
+          git config user.name "Viktor Poluksht"
       - run: |
           mkdir -p github.com/vpol/daily-proto-go
           cd github.com/vpol/
@@ -93,7 +103,7 @@ jobs:
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
           git tag 'dev-$CIRCLE_SHA1'
-          git push https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-python --tags
+          git push -q https://${REPO_TOKEN}@github.com/vpol/daily-proto-go --tags
 
   tag-go:
 
@@ -127,6 +137,11 @@ jobs:
 
     steps:
       - checkout
+      - name: setup
+        command: |
+          git config credential.helper 'cache --timeout=120'
+          git config user.email "vpoluksht@gmail.com"
+          git config user.name "Viktor Poluksht"
       - run: |
           mkdir -p github.com/vpol/daily-proto-ts
           cd github.com/vpol/
@@ -137,7 +152,7 @@ jobs:
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
           git tag 'dev-$CIRCLE_SHA1'
-          git push https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-python --tags
+          git push -q https://${REPO_TOKEN}@github.com/vpol/daily-proto-ts --tags
 
   tag-ts:
 
