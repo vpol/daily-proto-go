@@ -29,7 +29,7 @@ jobs:
       - run: |
           echo $CIRCLE_TAG
           echo $CIRCLE_SHA1
-          
+
   push-python:
     <<: *defaults
 
@@ -46,8 +46,10 @@ jobs:
           cd ../..
           python /build.py python .
       - run: |
-          echo $CIRCLE_TAG
-          echo $CIRCLE_SHA1
+          git add .
+          git commit --allow-empty -m "${RESULTING_TAG}: protobuf update"
+          git tag 'dev-$CIRCLE_SHA1'
+          git push https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-python --tags
 
   tag-python:
 
@@ -87,6 +89,11 @@ jobs:
           find ./daily-proto-go -type d -not -path './daily-proto-go/.git*' -not -path './daily-proto-go' -not -path './daily-proto-go/go.mod' -not -path './daily-proto-go/go.sum' | xargs rm  -rf {}
           cd ../..
           python /build.py go .
+      - run: |
+          git add .
+          git commit --allow-empty -m "${RESULTING_TAG}: protobuf update"
+          git tag 'dev-$CIRCLE_SHA1'
+          git push https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-python --tags
 
   tag-go:
 
@@ -126,6 +133,11 @@ jobs:
           git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-ts
           cd ../..
           python /build.py ts .
+      - run: |
+          git add .
+          git commit --allow-empty -m "${RESULTING_TAG}: protobuf update"
+          git tag 'dev-$CIRCLE_SHA1'
+          git push https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-python --tags
 
   tag-ts:
 
