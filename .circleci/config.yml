@@ -94,6 +94,8 @@ jobs:
             - "a6:11:e9:4f:42:c2:93:d0:0d:45:f4:c4:50:24:87:e7"
       - checkout
       - run: |
+          pwd
+          ls -la
           git push --set-upstream origin main
           git config credential.helper 'cache --timeout=120'
           git config user.email "vpoluksht@gmail.com"
