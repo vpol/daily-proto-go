@@ -109,7 +109,7 @@ jobs:
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
           git tag 'dev-$CIRCLE_SHA1'
-          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go --tags
+          git push -q https://${REPO_TOKEN}@github.com/vpol/daily-proto-go --tags
 
   tag-go:
 
