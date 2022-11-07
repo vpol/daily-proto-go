@@ -102,7 +102,7 @@ jobs:
           mkdir -p github.com/vpol/daily-proto-go
           cd github.com/vpol/
           git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go
-          git checkout main
+          git status
           find ./daily-proto-go -type d -not -path './daily-proto-go/.git*' -not -path './daily-proto-go' -not -path './daily-proto-go/go.mod' -not -path './daily-proto-go/go.sum' | xargs rm  -rf {}
           cd ../..
           python /build.py go .
