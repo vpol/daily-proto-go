@@ -100,6 +100,7 @@ jobs:
           git config user.name "Viktor Poluksht"
 
       - run: |
+          cd /
           mkdir -p github.com/vpol/daily-proto-go
           cd github.com/vpol/
           git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go
@@ -108,12 +109,12 @@ jobs:
           cd ../..
           python /build.py go .
       - run: |
-          pwd
+          cd /
           cd github.com/vpol/
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
           git tag 'dev-$CIRCLE_SHA1'
-          git push -q https://${REPO_TOKEN}@github.com/vpol/daily-proto-go main --tags
+          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go main --tags
 
   tag-go:
 
