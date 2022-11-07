@@ -185,7 +185,7 @@ workflows:
       - lint-go
 
       - push-go:
-          context: GCR
+          context: github
           requires:
             - lint-go
 
