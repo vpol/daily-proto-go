@@ -107,9 +107,8 @@ jobs:
           find ./daily-proto-go -type d -not -path './daily-proto-go/.git*' -not -path './daily-proto-go' -not -path './daily-proto-go/go.mod' -not -path './daily-proto-go/go.sum' | xargs rm  -rf {}
           cd ../..
           python /build.py go .
-          ls -la
+          ls -la github.com/vpol/daily-proto-go
       - run: |
-          cd /
           cd github.com/vpol/
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
