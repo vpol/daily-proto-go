@@ -108,6 +108,7 @@ jobs:
           cd ../..
           python /build.py go .
       - run: |
+          pwd
           cd github.com/vpol/
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
