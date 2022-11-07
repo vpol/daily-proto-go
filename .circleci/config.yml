@@ -113,7 +113,7 @@ jobs:
           echo "123"
           git tag $TAG
           git remote set-url origin https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go.git
-          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go --tags
+          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go main --tags
 
   tag-go:
 
