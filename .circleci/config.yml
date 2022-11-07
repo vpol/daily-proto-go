@@ -109,9 +109,9 @@ jobs:
           cd github.com/vpol/
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
-          git tag 'dev-$CIRCLE_SHA1'
+          git tag 'dev-${CIRCLE_SHA1}'
           git remote set-url origin https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go.git
-          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go main --tags
+          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go --tags
 
   tag-go:
 
