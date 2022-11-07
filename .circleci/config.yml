@@ -111,10 +111,9 @@ jobs:
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
           export TAG=dev-${CIRCLE_SHA1}
-          echo "123"
           git tag $TAG
           git remote set-url origin https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go.git
-          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go main --tags
+          git push --force -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go main --tags
 
   tag-go:
 
