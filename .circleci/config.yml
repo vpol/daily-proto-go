@@ -98,13 +98,11 @@ jobs:
           git config credential.helper 'cache --timeout=120'
           git config user.email "vpoluksht@gmail.com"
           git config user.name "Viktor Poluksht"
-
       - run: |
           cd /
           mkdir -p github.com/vpol/daily-proto-go
           cd github.com/vpol/
           git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go
-          git remote set-url origin https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go.git
           find ./daily-proto-go -type d -not -path './daily-proto-go/.git*' -not -path './daily-proto-go' -not -path './daily-proto-go/go.mod' -not -path './daily-proto-go/go.sum' | xargs rm  -rf {}
           cd ../..
           python /build.py go .
