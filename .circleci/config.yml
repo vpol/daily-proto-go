@@ -49,7 +49,7 @@ jobs:
       - run: |
           mkdir -p github.com/vpol/daily-proto-python
           cd github.com/vpol/
-          git clone https://${REPO_TOKEN}@github.com/vpol/daily-proto-python
+          git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-python
           find ./daily-proto-python -type d -not -path './daily-proto-python/.git*' -not -path './daily-proto-python' | xargs rm  -rf {}
           cd ../..
           python /build.py python .
@@ -57,7 +57,7 @@ jobs:
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
           git tag 'dev-${CIRCLE_SHA1}'
-          git push -q https://${REPO_TOKEN}@github.com/vpol/daily-proto-python --tags
+          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-python --tags
 
   tag-python:
 
@@ -101,7 +101,7 @@ jobs:
       - run: |
           mkdir -p github.com/vpol/daily-proto-go
           cd github.com/vpol/
-          git clone https://${REPO_TOKEN}@github.com/vpol/daily-proto-go
+          git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go
           find ./daily-proto-go -type d -not -path './daily-proto-go/.git*' -not -path './daily-proto-go' -not -path './daily-proto-go/go.mod' -not -path './daily-proto-go/go.sum' | xargs rm  -rf {}
           cd ../..
           python /build.py go .
@@ -109,7 +109,7 @@ jobs:
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
           git tag 'dev-$CIRCLE_SHA1'
-          git push -q https://${REPO_TOKEN}@github.com/vpol/daily-proto-go --tags
+          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-go --tags
 
   tag-go:
 
@@ -154,14 +154,14 @@ jobs:
       - run: |
           mkdir -p github.com/vpol/daily-proto-ts
           cd github.com/vpol/
-          git clone https://${REPO_TOKEN}@github.com/vpol/daily-proto-ts
+          git clone https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-ts
           cd ../..
           python /build.py ts .
       - run: |
           git add .
           git commit --allow-empty -m "${CIRCLE_SHA1}: protobuf update"
           git tag 'dev-$CIRCLE_SHA1'
-          git push -q https://${REPO_TOKEN}@github.com/vpol/daily-proto-ts --tags
+          git push -q https://${REPO_USER}:${REPO_TOKEN}@github.com/vpol/daily-proto-ts --tags
 
   tag-ts:
 
